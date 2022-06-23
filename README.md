@@ -1,6 +1,6 @@
 # Balsa Reference Implementation
 
-Primitives for reading and writing [Balsa](https://github.com/rapodaca/dialect), a molecular language based on SMILES.
+Primitives for reading and writing [Balsa](https://github.com/metamolecular/balsadoc), a molecular language based on SMILES.
 
 Balsa is based on two earlier libraries: [Dialect.rs](https://github.com/rapodaca/dialect.rs) and  [Purr](https://github.com/rapodaca/purr).
 

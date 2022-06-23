@@ -5,7 +5,7 @@ version = "0.1.0"
 edition = "2021"
 license = "MIT"
 license_file = "LICENSE"
-homepage = "https://github.com/rapodaca/balsa/"
+homepage = "https://github.com/metamolecular/balsa/"
 readme = "README.md"
 
 [dependencies]

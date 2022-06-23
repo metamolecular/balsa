@@ -1,0 +1,13 @@
+[package]
+name = "balsa"
+description = "Reference implementation for the Balsa molecular line notation."
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+license_file = "LICENSE"
+homepage = "https://github.com/rapodaca/balsa/"
+readme = "README.md"
+
+[dependencies]
+pretty_assertions = "1.0.0"
+lyn = "0.1.0"

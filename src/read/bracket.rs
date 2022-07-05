@@ -1,8 +1,8 @@
-use lyn::{Action, Scanner};
+use lyn::Scanner;
 
-use super::{digit, element, missing_character, nonzero, Error};
+use super::{digit, element, missing_character, nonzero, selection, Error};
 use crate::feature::{
-    Bracket, Charge, Isotope, Selection, Stereodescriptor, Symbol,
+    Bracket, Charge, Isotope, Stereodescriptor, Symbol,
     VirtualHydrogen,
 };
 
@@ -48,20 +48,13 @@ fn isotope(scanner: &mut Scanner) -> Option<Isotope> {
 fn symbol(scanner: &mut Scanner) -> Result<Option<Symbol>, Error> {
     if let Some(element) = element(scanner)? {
         Ok(Some(Symbol::Element(element)))
-    } else if let Some(selection) = selected_element(scanner)? {
+    } else if let Some(selection) = selection(scanner) {
         Ok(Some(Symbol::Selection(selection)))
     } else if star(scanner) {
         Ok(Some(Symbol::Star))
     } else {
         Ok(None)
     }
-}
-
-fn selected_element(scanner: &mut Scanner) -> Result<Option<Selection>, Error> {
-    Ok(scanner.scan(|symbol| match symbol {
-        "c" => Some(Action::Return(Selection::C)),
-        _ => None,
-    })?)
 }
 
 fn star(scanner: &mut Scanner) -> bool {
@@ -143,7 +136,7 @@ mod isotope {
 
 #[cfg(test)]
 mod tests {
-    use crate::feature::Element;
+    use crate::feature::{Element, Selection};
     use pretty_assertions::assert_eq;
 
     use super::*;

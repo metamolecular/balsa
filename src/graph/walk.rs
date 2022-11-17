@@ -36,7 +36,7 @@ fn walk_root(
             None => {
                 follower.bridge(&bond.kind, &bridge_pool.hit(sid, bond.tid));
 
-                continue
+                continue;
             }
         };
 
@@ -76,7 +76,10 @@ fn bonds(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{follow::Writer, feature::{Bracket, Symbol, AtomKind, Element}};
+    use crate::{
+        feature::{AtomKind, Bracket, Element, Symbol},
+        follow::Writer,
+    };
     use pretty_assertions::assert_eq;
 
     #[test]
@@ -96,7 +99,7 @@ mod tests {
                 symbol: Symbol::Element(Element::Tc),
                 ..Default::default()
             }),
-            bonds: vec![]
+            bonds: vec![],
         }];
         let mut writer = Writer::new();
 
@@ -136,7 +139,7 @@ mod tests {
     fn p2_triple() {
         let graph = vec![
             Atom::star(vec![Bond::triple(1)]),
-            Atom::star(vec![Bond::triple(0)])
+            Atom::star(vec![Bond::triple(0)]),
         ];
         let mut writer = Writer::new();
 
@@ -206,13 +209,9 @@ mod tests {
     fn s3_terminal() {
         let graph = vec![
             Atom::star(vec![Bond::elided(1)]),
-            Atom::star(vec![
-                Bond::elided(0),
-                Bond::elided(2),
-                Bond::elided(3),
-            ]),
+            Atom::star(vec![Bond::elided(0), Bond::elided(2), Bond::elided(3)]),
             Atom::star(vec![Bond::elided(1)]),
-            Atom::star(vec![Bond::elided(1)])
+            Atom::star(vec![Bond::elided(1)]),
         ];
         let mut writer = Writer::new();
 
@@ -233,7 +232,7 @@ mod tests {
             ]),
             Atom::star(vec![Bond::elided(1)]),
             Atom::star(vec![Bond::elided(1)]),
-            Atom::star(vec![Bond::elided(1)])
+            Atom::star(vec![Bond::elided(1)]),
         ];
         let mut writer = Writer::new();
 
@@ -246,17 +245,9 @@ mod tests {
     fn diamond() {
         let graph = vec![
             Atom::star(vec![Bond::elided(1), Bond::elided(3)]),
-            Atom::star(vec![
-                Bond::elided(0),
-                Bond::elided(2),
-                Bond::elided(3),
-            ]),
+            Atom::star(vec![Bond::elided(0), Bond::elided(2), Bond::elided(3)]),
             Atom::star(vec![Bond::elided(1), Bond::elided(3)]),
-            Atom::star(vec![
-                Bond::elided(2),
-                Bond::elided(0),
-                Bond::elided(1),
-            ]),
+            Atom::star(vec![Bond::elided(2), Bond::elided(0), Bond::elided(1)]),
         ];
         let mut writer = Writer::new();
 

@@ -1,3 +1,4 @@
+mod atom;
 mod bond;
 mod bracket;
 mod bridge;
@@ -11,6 +12,7 @@ mod selection;
 mod shortcut;
 mod uint16;
 
+pub use atom::atom;
 pub use bond::bond;
 pub use bracket::bracket;
 pub use bridge::bridge;

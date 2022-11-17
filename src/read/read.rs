@@ -1,12 +1,7 @@
 use lyn::Scanner;
 
-use super::{
-    bond, bracket, bridge, missing_character, selection, shortcut, Error,
-};
-use crate::{
-    feature::{AtomKind, BondKind},
-    follow::Follower,
-};
+use super::{atom, bond, bridge, missing_character, Error};
+use crate::{feature::BondKind, follow::Follower};
 
 pub fn read(string: &str, follower: &mut impl Follower) -> Result<(), Error> {
     let mut scanner = Scanner::new(string);
@@ -20,10 +15,10 @@ pub fn read(string: &str, follower: &mut impl Follower) -> Result<(), Error> {
     }
 }
 
-fn sequence<F: Follower>(
+fn sequence(
     input: Option<&BondKind>,
     scanner: &mut Scanner,
-    reporter: &mut F,
+    reporter: &mut impl Follower,
 ) -> Result<bool, Error> {
     let atom_kind = match atom(scanner)? {
         Some(kind) => kind,
@@ -38,7 +33,7 @@ fn sequence<F: Follower>(
     loop {
         if union(scanner, reporter)?
             || branch(scanner, reporter)?
-            || split(scanner, reporter)?
+            || gap(scanner, reporter)?
         {
             continue;
         }
@@ -47,26 +42,26 @@ fn sequence<F: Follower>(
     }
 }
 
-fn union<F: Follower>(
+fn union(
     scanner: &mut Scanner,
-    reporter: &mut F,
+    reporter: &mut impl Follower,
 ) -> Result<bool, Error> {
     match bond(scanner) {
         Some(bond_kind) => {
-            if cut_or_sequence(&bond_kind, scanner, reporter)? {
+            if bridge_or_sequence(&bond_kind, scanner, reporter)? {
                 Ok(true)
             } else {
                 Err(missing_character(scanner))
             }
         }
-        None => cut_or_sequence(&BondKind::Elided, scanner, reporter),
+        None => bridge_or_sequence(&BondKind::Elided, scanner, reporter),
     }
 }
 
-fn cut_or_sequence<F: Follower>(
+fn bridge_or_sequence(
     bond_kind: &BondKind,
     scanner: &mut Scanner,
-    reporter: &mut F,
+    reporter: &mut impl Follower,
 ) -> Result<bool, Error> {
     if let Some(bridge) = bridge(scanner)? {
         reporter.bridge(bond_kind, &bridge);
@@ -77,9 +72,9 @@ fn cut_or_sequence<F: Follower>(
     }
 }
 
-fn branch<F: Follower>(
+fn branch(
     scanner: &mut Scanner,
-    reporter: &mut F,
+    reporter: &mut impl Follower,
 ) -> Result<bool, Error> {
     if !scanner.take(&'(') {
         return Ok(false);
@@ -111,9 +106,9 @@ fn branch<F: Follower>(
     }
 }
 
-fn split<F: Follower>(
+fn gap(
     scanner: &mut Scanner,
-    reporter: &mut F,
+    reporter: &mut impl Follower,
 ) -> Result<bool, Error> {
     if !scanner.take(&'.') {
         return Ok(false);
@@ -123,20 +118,6 @@ fn split<F: Follower>(
         Ok(true)
     } else {
         Err(missing_character(scanner))
-    }
-}
-
-fn atom(scanner: &mut Scanner) -> Result<Option<AtomKind>, Error> {
-    if scanner.take(&'*') {
-        Ok(Some(AtomKind::Star))
-    } else if let Some(shortcut) = shortcut(scanner)? {
-        Ok(Some(AtomKind::Shortcut(shortcut)))
-    } else if let Some(selection) = selection(scanner) {
-        Ok(Some(AtomKind::Selection(selection)))
-    } else if let Some(bracket) = bracket(scanner)? {
-        Ok(Some(AtomKind::Bracket(bracket)))
-    } else {
-        Ok(None)
     }
 }
 

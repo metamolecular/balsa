@@ -2,8 +2,7 @@ use lyn::Scanner;
 
 use super::{digit, element, missing_character, nonzero, selection, Error};
 use crate::feature::{
-    Bracket, Charge, Isotope, Stereodescriptor, Symbol,
-    VirtualHydrogen,
+    Bracket, Charge, Isotope, Stereodescriptor, Symbol, VirtualHydrogen,
 };
 
 pub fn bracket(scanner: &mut Scanner) -> Result<Option<Bracket>, Error> {

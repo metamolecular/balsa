@@ -34,11 +34,11 @@ impl AtomKind {
         if let AtomKind::Bracket(bracket) = self {
             if bracket.virtual_hydrogen.is_some() {
                 bracket.stereodescriptor = match bracket.stereodescriptor {
-                    Some(Stereodescriptor::Left) => {
-                        Some(Stereodescriptor::Right)
+                    Some(Stereodescriptor::Counterclockwise) => {
+                        Some(Stereodescriptor::Clocwise)
                     }
-                    Some(Stereodescriptor::Right) => {
-                        Some(Stereodescriptor::Left)
+                    Some(Stereodescriptor::Clocwise) => {
+                        Some(Stereodescriptor::Counterclockwise)
                     }
                     None => None,
                 };
@@ -68,7 +68,7 @@ mod tests {
         let mut kind = AtomKind::Bracket(Bracket {
             symbol: Symbol::Star,
             isotope: None,
-            stereodescriptor: Some(Stereodescriptor::Left),
+            stereodescriptor: Some(Stereodescriptor::Counterclockwise),
             virtual_hydrogen: None,
             charge: None,
         });
@@ -80,7 +80,7 @@ mod tests {
             AtomKind::Bracket(Bracket {
                 symbol: Symbol::Star,
                 isotope: None,
-                stereodescriptor: Some(Stereodescriptor::Left),
+                stereodescriptor: Some(Stereodescriptor::Counterclockwise),
                 virtual_hydrogen: None,
                 charge: None,
             })
@@ -92,7 +92,7 @@ mod tests {
         let mut kind = AtomKind::Bracket(Bracket {
             symbol: Symbol::Star,
             isotope: None,
-            stereodescriptor: Some(Stereodescriptor::Left),
+            stereodescriptor: Some(Stereodescriptor::Counterclockwise),
             virtual_hydrogen: Some(VirtualHydrogen::H1),
             charge: None,
         });
@@ -104,7 +104,7 @@ mod tests {
             AtomKind::Bracket(Bracket {
                 symbol: Symbol::Star,
                 isotope: None,
-                stereodescriptor: Some(Stereodescriptor::Right),
+                stereodescriptor: Some(Stereodescriptor::Clocwise),
                 virtual_hydrogen: Some(VirtualHydrogen::H1),
                 charge: None,
             })

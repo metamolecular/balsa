@@ -44,7 +44,7 @@ mod to_string {
         let bracket = Bracket {
             symbol: Symbol::Element(Element::C),
             isotope: Some(Isotope::new(13).unwrap()),
-            stereodescriptor: Some(Stereodescriptor::Left),
+            stereodescriptor: Some(Stereodescriptor::Counterclockwise),
             virtual_hydrogen: Some(VirtualHydrogen::H),
             charge: Some(Charge::Plus),
         };

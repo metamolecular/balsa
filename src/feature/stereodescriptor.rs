@@ -2,8 +2,8 @@ use std::fmt;
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Stereodescriptor {
-    Left,
-    Right,
+    Counterclockwise,
+    Clocwise,
 }
 
 impl fmt::Display for Stereodescriptor {
@@ -12,8 +12,8 @@ impl fmt::Display for Stereodescriptor {
             f,
             "{}",
             match self {
-                Self::Left => "@",
-                Self::Right => "@@",
+                Self::Counterclockwise => "@",
+                Self::Clocwise => "@@",
             }
         )
     }

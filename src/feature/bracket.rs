@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, fmt::Write};
 
 use super::{AtomParity, Charge, Isotope, Symbol, VirtualHydrogen};
 
@@ -13,22 +13,27 @@ pub struct Bracket {
 
 impl fmt::Display for Bracket {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "[{}{}{}{}{}]",
-            option_to_string(&self.isotope),
-            self.symbol.to_string(),
-            option_to_string(&self.parity),
-            option_to_string(&self.hydrogens),
-            option_to_string(&self.charge),
-        )
-    }
-}
+        f.write_char('[')?;
 
-fn option_to_string<T: fmt::Display>(option: &Option<T>) -> String {
-    match option {
-        Some(option) => option.to_string(),
-        None => "".to_string(),
+        if let Some(isotope) = &self.isotope {
+            isotope.fmt(f)?
+        }
+
+        self.symbol.fmt(f)?;
+
+        if let Some(parity) = &self.parity {
+            parity.fmt(f)?
+        }
+
+        if let Some(hydrogens) = &self.hydrogens {
+            hydrogens.fmt(f)?
+        }
+
+        if let Some(charge) = &self.charge {
+            charge.fmt(f)?
+        }
+
+        f.write_char(']')
     }
 }
 

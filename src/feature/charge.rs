@@ -52,27 +52,27 @@ impl Charge {
 
 impl fmt::Display for Charge {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Charge::Minus9 => "-9".fmt(f),
-            Charge::Minus8 => "-8".fmt(f),
-            Charge::Minus7 => "-7".fmt(f),
-            Charge::Minus6 => "-6".fmt(f),
-            Charge::Minus5 => "-5".fmt(f),
-            Charge::Minus4 => "-4".fmt(f),
-            Charge::Minus3 => "-3".fmt(f),
-            Charge::Minus2 => "-2".fmt(f),
-            Charge::Minus1 => "-1".fmt(f),
-            Charge::Minus => "-".fmt(f),
-            Charge::Plus => "+".fmt(f),
-            Charge::Plus1 => "+1".fmt(f),
-            Charge::Plus2 => "+2".fmt(f),
-            Charge::Plus3 => "+3".fmt(f),
-            Charge::Plus4 => "+4".fmt(f),
-            Charge::Plus5 => "+5".fmt(f),
-            Charge::Plus6 => "+6".fmt(f),
-            Charge::Plus7 => "+7".fmt(f),
-            Charge::Plus8 => "+8".fmt(f),
-            Charge::Plus9 => "+9".fmt(f),
-        }
+        f.write_str(match self {
+            Charge::Minus9 => "-9",
+            Charge::Minus8 => "-8",
+            Charge::Minus7 => "-7",
+            Charge::Minus6 => "-6",
+            Charge::Minus5 => "-5",
+            Charge::Minus4 => "-4",
+            Charge::Minus3 => "-3",
+            Charge::Minus2 => "-2",
+            Charge::Minus1 => "-1",
+            Charge::Minus => "-",
+            Charge::Plus => "+",
+            Charge::Plus1 => "+1",
+            Charge::Plus2 => "+2",
+            Charge::Plus3 => "+3",
+            Charge::Plus4 => "+4",
+            Charge::Plus5 => "+5",
+            Charge::Plus6 => "+6",
+            Charge::Plus7 => "+7",
+            Charge::Plus8 => "+8",
+            Charge::Plus9 => "+9",
+        })
     }
 }

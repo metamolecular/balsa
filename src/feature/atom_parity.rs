@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, fmt::Write};
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum AtomParity {
@@ -8,13 +8,9 @@ pub enum AtomParity {
 
 impl fmt::Display for AtomParity {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            match self {
-                Self::Counterclockwise => "@",
-                Self::Clocwise => "@@",
-            }
-        )
+        match self {
+            Self::Counterclockwise => f.write_char('@'),
+            Self::Clocwise => f.write_str("@@"),
+        }
     }
 }

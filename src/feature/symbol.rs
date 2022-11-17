@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, fmt::Write};
 
 use super::{Element, Selection};
 
@@ -12,7 +12,7 @@ pub enum Symbol {
 impl fmt::Display for Symbol {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Star => write!(f, "*"),
+            Self::Star => f.write_char('*'),
             Self::Element(element) => element.fmt(f),
             Self::Selection(selection) => selection.fmt(f),
         }

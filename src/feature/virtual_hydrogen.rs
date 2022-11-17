@@ -39,21 +39,17 @@ impl default::Default for VirtualHydrogen {
 
 impl fmt::Display for VirtualHydrogen {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            match self {
-                Self::H => "H",
-                Self::H1 => "H1",
-                Self::H2 => "H2",
-                Self::H3 => "H3",
-                Self::H4 => "H4",
-                Self::H5 => "H5",
-                Self::H6 => "H6",
-                Self::H7 => "H7",
-                Self::H8 => "H8",
-                Self::H9 => "H9",
-            }
-        )
+        f.write_str(match self {
+            Self::H => "H",
+            Self::H1 => "H1",
+            Self::H2 => "H2",
+            Self::H3 => "H3",
+            Self::H4 => "H4",
+            Self::H5 => "H5",
+            Self::H6 => "H6",
+            Self::H7 => "H7",
+            Self::H8 => "H8",
+            Self::H9 => "H9",
+        })
     }
 }

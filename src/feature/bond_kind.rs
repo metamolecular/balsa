@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, fmt::Write};
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum BondKind {
@@ -13,12 +13,12 @@ pub enum BondKind {
 impl fmt::Display for BondKind {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Self::Elided => write!(f, ""),
-            Self::Single => write!(f, "-"),
-            Self::Double => write!(f, "="),
-            Self::Triple => write!(f, "#"),
-            Self::Up => write!(f, "/"),
-            Self::Down => write!(f, "\\"),
+            Self::Elided => Ok(()),
+            Self::Single => f.write_char('-'),
+            Self::Double => f.write_char('='),
+            Self::Triple => f.write_char('#'),
+            Self::Up => f.write_char('/'),
+            Self::Down => f.write_char('\\'),
         }
     }
 }

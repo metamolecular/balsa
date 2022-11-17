@@ -16,21 +16,17 @@ pub enum Shortcut {
 
 impl fmt::Display for Shortcut {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            match self {
-                Self::B => "B",
-                Self::C => "C",
-                Self::N => "N",
-                Self::O => "O",
-                Self::F => "F",
-                Self::Cl => "Cl",
-                Self::Br => "Br",
-                Self::I => "I",
-                Self::P => "P",
-                Self::S => "S",
-            }
-        )
+        f.write_str(match self {
+            Self::B => "B",
+            Self::C => "C",
+            Self::N => "N",
+            Self::O => "O",
+            Self::F => "F",
+            Self::Cl => "Cl",
+            Self::Br => "Br",
+            Self::I => "I",
+            Self::P => "P",
+            Self::S => "S",
+        })
     }
 }

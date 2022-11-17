@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, fmt::Write};
 
 use super::{AtomParity, Bracket, Selection, Shortcut};
 
@@ -19,7 +19,7 @@ impl Default for AtomKind {
 impl fmt::Display for AtomKind {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Self::Star => write!(f, "*"),
+            Self::Star => f.write_char('*'),
             Self::Shortcut(shortcut) => shortcut.fmt(f),
             Self::Selection(selection) => selection.fmt(f),
             Self::Bracket(bracket) => bracket.fmt(f),

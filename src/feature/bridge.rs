@@ -1,4 +1,4 @@
-use std::{fmt, fmt::Write};
+use std::fmt;
 
 #[derive(Debug, PartialEq, Clone, Eq, Hash)]
 pub enum Bridge {

@@ -63,7 +63,7 @@ fn star(scanner: &mut Scanner) -> bool {
 fn atom_parity(scanner: &mut Scanner) -> Option<AtomParity> {
     if scanner.take(&'@') {
         if scanner.take(&'@') {
-            Some(AtomParity::Clocwise)
+            Some(AtomParity::Clockwise)
         } else {
             Some(AtomParity::Counterclockwise)
         }

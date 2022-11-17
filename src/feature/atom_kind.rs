@@ -35,9 +35,9 @@ impl AtomKind {
             if bracket.hydrogens.is_some() {
                 bracket.parity = match bracket.parity {
                     Some(AtomParity::Counterclockwise) => {
-                        Some(AtomParity::Clocwise)
+                        Some(AtomParity::Clockwise)
                     }
-                    Some(AtomParity::Clocwise) => {
+                    Some(AtomParity::Clockwise) => {
                         Some(AtomParity::Counterclockwise)
                     }
                     None => None,
@@ -104,7 +104,7 @@ mod tests {
             AtomKind::Bracket(Bracket {
                 symbol: Symbol::Star,
                 isotope: None,
-                parity: Some(AtomParity::Clocwise),
+                parity: Some(AtomParity::Clockwise),
                 hydrogens: Some(VirtualHydrogen::H1),
                 charge: None,
             })

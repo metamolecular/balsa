@@ -1,13 +1,13 @@
 use std::fmt;
 
-use super::{Charge, Isotope, Stereodescriptor, Symbol, VirtualHydrogen};
+use super::{AtomParity, Charge, Isotope, Symbol, VirtualHydrogen};
 
 #[derive(Debug, PartialEq, Clone, Default)]
 pub struct Bracket {
     pub symbol: Symbol,
     pub isotope: Option<Isotope>,
-    pub stereodescriptor: Option<Stereodescriptor>,
-    pub virtual_hydrogen: Option<VirtualHydrogen>,
+    pub parity: Option<AtomParity>,
+    pub hydrogens: Option<VirtualHydrogen>,
     pub charge: Option<Charge>,
 }
 
@@ -18,8 +18,8 @@ impl fmt::Display for Bracket {
             "[{}{}{}{}{}]",
             option_to_string(&self.isotope),
             self.symbol.to_string(),
-            option_to_string(&self.stereodescriptor),
-            option_to_string(&self.virtual_hydrogen),
+            option_to_string(&self.parity),
+            option_to_string(&self.hydrogens),
             option_to_string(&self.charge),
         )
     }
@@ -44,8 +44,8 @@ mod to_string {
         let bracket = Bracket {
             symbol: Symbol::Element(Element::C),
             isotope: Some(Isotope::new(13).unwrap()),
-            stereodescriptor: Some(Stereodescriptor::Counterclockwise),
-            virtual_hydrogen: Some(VirtualHydrogen::H),
+            parity: Some(AtomParity::Counterclockwise),
+            hydrogens: Some(VirtualHydrogen::H),
             charge: Some(Charge::Plus),
         };
 

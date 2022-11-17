@@ -1,6 +1,6 @@
 use std::fmt;
 
-use super::{Bracket, Selection, Shortcut, Stereodescriptor};
+use super::{AtomParity, Bracket, Selection, Shortcut};
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum AtomKind {
@@ -32,13 +32,13 @@ impl AtomKind {
     /// hydrogens.
     pub fn invert_configuration(&mut self) {
         if let AtomKind::Bracket(bracket) = self {
-            if bracket.virtual_hydrogen.is_some() {
-                bracket.stereodescriptor = match bracket.stereodescriptor {
-                    Some(Stereodescriptor::Counterclockwise) => {
-                        Some(Stereodescriptor::Clocwise)
+            if bracket.hydrogens.is_some() {
+                bracket.parity = match bracket.parity {
+                    Some(AtomParity::Counterclockwise) => {
+                        Some(AtomParity::Clocwise)
                     }
-                    Some(Stereodescriptor::Clocwise) => {
-                        Some(Stereodescriptor::Counterclockwise)
+                    Some(AtomParity::Clocwise) => {
+                        Some(AtomParity::Counterclockwise)
                     }
                     None => None,
                 };
@@ -68,8 +68,8 @@ mod tests {
         let mut kind = AtomKind::Bracket(Bracket {
             symbol: Symbol::Star,
             isotope: None,
-            stereodescriptor: Some(Stereodescriptor::Counterclockwise),
-            virtual_hydrogen: None,
+            parity: Some(AtomParity::Counterclockwise),
+            hydrogens: None,
             charge: None,
         });
 
@@ -80,8 +80,8 @@ mod tests {
             AtomKind::Bracket(Bracket {
                 symbol: Symbol::Star,
                 isotope: None,
-                stereodescriptor: Some(Stereodescriptor::Counterclockwise),
-                virtual_hydrogen: None,
+                parity: Some(AtomParity::Counterclockwise),
+                hydrogens: None,
                 charge: None,
             })
         )
@@ -92,8 +92,8 @@ mod tests {
         let mut kind = AtomKind::Bracket(Bracket {
             symbol: Symbol::Star,
             isotope: None,
-            stereodescriptor: Some(Stereodescriptor::Counterclockwise),
-            virtual_hydrogen: Some(VirtualHydrogen::H1),
+            parity: Some(AtomParity::Counterclockwise),
+            hydrogens: Some(VirtualHydrogen::H1),
             charge: None,
         });
 
@@ -104,8 +104,8 @@ mod tests {
             AtomKind::Bracket(Bracket {
                 symbol: Symbol::Star,
                 isotope: None,
-                stereodescriptor: Some(Stereodescriptor::Clocwise),
-                virtual_hydrogen: Some(VirtualHydrogen::H1),
+                parity: Some(AtomParity::Clocwise),
+                hydrogens: Some(VirtualHydrogen::H1),
                 charge: None,
             })
         )

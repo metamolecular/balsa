@@ -2,7 +2,7 @@ use lyn::Scanner;
 
 use super::{digit, element, missing_character, nonzero, selection, Error};
 use crate::feature::{
-    Bracket, Charge, Isotope, Stereodescriptor, Symbol, VirtualHydrogen,
+    AtomParity, Bracket, Charge, Isotope, Symbol, VirtualHydrogen,
 };
 
 pub fn bracket(scanner: &mut Scanner) -> Result<Option<Bracket>, Error> {
@@ -16,8 +16,8 @@ pub fn bracket(scanner: &mut Scanner) -> Result<Option<Bracket>, Error> {
             Some(symbol) => symbol,
             None => return Err(missing_character(scanner)),
         },
-        stereodescriptor: stereodescriptor(scanner),
-        virtual_hydrogen: virtual_hydrogen(scanner),
+        parity: atom_parity(scanner),
+        hydrogens: virtual_hydrogen(scanner),
         charge: charge(scanner),
     }));
 
@@ -60,12 +60,12 @@ fn star(scanner: &mut Scanner) -> bool {
     scanner.take(&'*')
 }
 
-fn stereodescriptor(scanner: &mut Scanner) -> Option<Stereodescriptor> {
+fn atom_parity(scanner: &mut Scanner) -> Option<AtomParity> {
     if scanner.take(&'@') {
         if scanner.take(&'@') {
-            Some(Stereodescriptor::Clocwise)
+            Some(AtomParity::Clocwise)
         } else {
-            Some(Stereodescriptor::Counterclockwise)
+            Some(AtomParity::Counterclockwise)
         }
     } else {
         None
@@ -251,7 +251,7 @@ mod tests {
             bracket(&mut scanner),
             Ok(Some(Bracket {
                 symbol: Symbol::Element(Element::C),
-                stereodescriptor: Some(Stereodescriptor::Counterclockwise),
+                parity: Some(AtomParity::Counterclockwise),
                 ..Default::default()
             }))
         )
@@ -265,7 +265,7 @@ mod tests {
             bracket(&mut scanner),
             Ok(Some(Bracket {
                 symbol: Symbol::Element(Element::C),
-                virtual_hydrogen: Some(VirtualHydrogen::H1),
+                hydrogens: Some(VirtualHydrogen::H1),
                 ..Default::default()
             }))
         )
@@ -294,8 +294,8 @@ mod tests {
             Ok(Some(Bracket {
                 symbol: Symbol::Element(Element::C),
                 isotope: Some(Isotope::new(12).unwrap()),
-                stereodescriptor: Some(Stereodescriptor::Counterclockwise),
-                virtual_hydrogen: Some(VirtualHydrogen::H1),
+                parity: Some(AtomParity::Counterclockwise),
+                hydrogens: Some(VirtualHydrogen::H1),
                 charge: Some(Charge::Plus2),
             }))
         )

@@ -37,7 +37,7 @@ impl BondKind {
 }
 
 #[cfg(test)]
-mod tests {
+mod reverse {
     use super::*;
     use pretty_assertions::assert_eq;
 

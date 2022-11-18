@@ -48,7 +48,7 @@ impl AtomKind {
 }
 
 #[cfg(test)]
-mod tests {
+mod invert_configuration {
     use crate::feature::{Symbol, VirtualHydrogen};
 
     use super::*;

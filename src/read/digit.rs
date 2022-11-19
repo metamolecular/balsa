@@ -12,8 +12,8 @@ pub fn digit(scanner: &mut Scanner) -> Option<u8> {
 
 #[cfg(test)]
 mod tests {
-    use pretty_assertions::assert_eq;
     use super::*;
+    use pretty_assertions::assert_eq;
 
     #[test]
     fn not_found() {

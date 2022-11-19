@@ -120,3 +120,37 @@ pub fn element(scanner: &mut Scanner) -> Result<Option<Element>, Error> {
         _ => None,
     })?)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn not_found() {
+        let mut scanner = Scanner::new("x");
+
+        assert_eq!(element(&mut scanner), Ok(None))
+    }
+
+    #[test]
+    fn cap_found_lower_not_found_error() {
+        let mut scanner = Scanner::new("Ax");
+
+        assert_eq!(element(&mut scanner), Err(Error::Character(1)))
+    }
+
+    #[test]
+    fn cap_found_lower_not_found_ok() {
+        let mut scanner = Scanner::new("Bx");
+
+        assert_eq!(element(&mut scanner), Ok(Some(Element::B)))
+    }
+
+    #[test]
+    fn cap_found_lower_not_found() {
+        let mut scanner = Scanner::new("Br");
+
+        assert_eq!(element(&mut scanner), Ok(Some(Element::Br)))
+    }
+}

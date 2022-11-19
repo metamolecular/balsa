@@ -12,3 +12,23 @@ pub fn bond(scanner: &mut Scanner) -> Option<BondKind> {
         _ => None,
     })
 }
+
+#[cfg(test)]
+mod  tests {
+    use pretty_assertions::assert_eq;
+    use super::*;
+
+    #[test]
+    fn invalid() {
+        let mut scanner = Scanner::new("x");
+
+        assert_eq!(bond(&mut scanner), None)
+    }
+
+    #[test]
+    fn valid() {
+        let mut scanner = Scanner::new("-");
+
+        assert_eq!(bond(&mut scanner), Some(BondKind::Single))
+    }
+}

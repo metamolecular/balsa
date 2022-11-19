@@ -20,8 +20,8 @@ pub fn shortcut(scanner: &mut Scanner) -> Result<Option<Shortcut>, lyn::Error> {
 
 #[cfg(test)]
 mod tests {
-    use pretty_assertions::assert_eq;
     use super::*;
+    use pretty_assertions::assert_eq;
 
     #[test]
     fn unexpected() {

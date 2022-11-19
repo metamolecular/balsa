@@ -13,3 +13,23 @@ pub fn selection(scanner: &mut Scanner) -> Option<Selection> {
         _ => None,
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn not_found() {
+        let mut scanner = Scanner::new("x");
+
+        assert_eq!(selection(&mut scanner), None)
+    }
+
+    #[test]
+    fn found() {
+        let mut scanner = Scanner::new("b");
+
+        assert_eq!(selection(&mut scanner), Some(Selection::B))
+    }
+}

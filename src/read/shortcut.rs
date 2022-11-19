@@ -17,3 +17,30 @@ pub fn shortcut(scanner: &mut Scanner) -> Result<Option<Shortcut>, lyn::Error> {
         _ => None,
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use pretty_assertions::assert_eq;
+    use super::*;
+
+    #[test]
+    fn unexpected() {
+        let mut scanner = Scanner::new("x");
+
+        assert_eq!(shortcut(&mut scanner), Ok(None))
+    }
+
+    #[test]
+    fn expected_unexpected_ok() {
+        let mut scanner = Scanner::new("Cx");
+
+        assert_eq!(shortcut(&mut scanner), Ok(Some(Shortcut::C)))
+    }
+
+    #[test]
+    fn expected_expected_ok() {
+        let mut scanner = Scanner::new("Cl");
+
+        assert_eq!(shortcut(&mut scanner), Ok(Some(Shortcut::Cl)))
+    }
+}

@@ -19,6 +19,37 @@ pub enum Element {
     Fm, Md, No, Lr, Rf                      // 10
 }
 
+// TABLE 8
+const BORON: [u8; 1] = [3];
+const CARBON: [u8; 1] = [4];
+const NITROGEN: [u8; 2] = [3, 5];
+const OXYGEN: [u8; 1] = [2];
+const FLUORENE: [u8; 1] = [1];
+const PHOSPHOROUS: [u8; 2] = [3, 5];
+const SULFUR: [u8; 3] = [2, 4, 6];
+const CHLORINE: [u8; 1] = [1];
+const BROMINE: [u8; 1] = [1];
+const IODINE: [u8; 1] = [1];
+const EMPTY: [u8; 0] = [];
+
+impl Element {
+    pub fn default_valences(&self) -> &[u8] {
+        match self {
+            Self::B => &BORON,
+            Self::C => &CARBON,
+            Self::N => &NITROGEN,
+            Self::O => &OXYGEN,
+            Self::F => &FLUORENE,
+            Self::P => &PHOSPHOROUS,
+            Self::S => &SULFUR,
+            Self::Cl => &CHLORINE,
+            Self::Br => &BROMINE,
+            Self::I => &IODINE,
+            _ => &EMPTY,
+        }
+    }
+}
+
 impl std::convert::From<&Shortcut> for Element {
     fn from(shortcut: &Shortcut) -> Self {
         match shortcut {
@@ -157,5 +188,25 @@ impl fmt::Display for Element {
             Element::Zn => "Zn",
             Element::Zr => "Zr",
         })
+    }
+}
+
+#[cfg(test)]
+mod default_valence {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn disallowed() {
+        let element = Element::H;
+
+        assert_eq!(element.default_valences(), [])
+    }
+
+    #[test]
+    fn boron() {
+        let element = Element::B;
+
+        assert_eq!(element.default_valences(), [3].as_ref())
     }
 }

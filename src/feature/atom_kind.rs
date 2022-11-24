@@ -1,6 +1,6 @@
 use std::{fmt, fmt::Write};
 
-use super::{AtomParity, Bracket, Selection, Shortcut};
+use super::{AtomParity, Bracket, Element, Selection, Shortcut, Symbol};
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum AtomKind {
@@ -44,6 +44,28 @@ impl AtomKind {
                 };
             }
         }
+    }
+
+    /// Returns subvalence, as defined in the working paper.
+    pub fn subvalence(&self, valence: u8) -> u8 {
+        let element: Element = match self {
+            Self::Star => return 0,
+            Self::Shortcut(shortcut) => shortcut.into(),
+            Self::Selection(selection) => selection.into(),
+            Self::Bracket(bracket) => match &bracket.symbol {
+                Symbol::Star => return 0,
+                Symbol::Element(element) => element.clone(),
+                Symbol::Selection(selection) => selection.into(),
+            },
+        };
+
+        for default_valence in element.default_valences() {
+            if default_valence >= &valence {
+                return default_valence - valence;
+            }
+        }
+
+        0
     }
 }
 
@@ -109,5 +131,98 @@ mod invert_configuration {
                 charge: None,
             })
         )
+    }
+}
+
+#[cfg(test)]
+mod self_subvalence {
+    use pretty_assertions::assert_eq;
+
+    use super::*;
+
+    #[test]
+    fn star() {
+        let kind = AtomKind::Star;
+
+        assert_eq!(kind.subvalence(1), 0)
+    }
+
+    #[test]
+    fn shortcut_subvalent() {
+        let kind = AtomKind::Shortcut(Shortcut::C);
+
+        assert_eq!(kind.subvalence(0), 4)
+    }
+
+    #[test]
+    fn selection_subvalent() {
+        let kind = AtomKind::Selection(Selection::C);
+
+        assert_eq!(kind.subvalence(0), 4)
+    }
+
+    #[test]
+    fn bracket_star() {
+        let kind = AtomKind::Bracket(Bracket {
+            symbol: Symbol::Star,
+            ..Default::default()
+        });
+
+        assert_eq!(kind.subvalence(0), 0)
+    }
+
+    #[test]
+    fn bracket_element() {
+        let kind = AtomKind::Bracket(Bracket {
+            symbol: Symbol::Element(Element::C),
+            ..Default::default()
+        });
+
+        assert_eq!(kind.subvalence(0), 4)
+    }
+
+    #[test]
+    fn bracket_selection() {
+        let kind = AtomKind::Bracket(Bracket {
+            symbol: Symbol::Selection(Selection::C),
+            ..Default::default()
+        });
+
+        assert_eq!(kind.subvalence(0), 4)
+    }
+
+    #[test]
+    fn defaults_one_subvalent() {
+        let kind = AtomKind::Selection(Selection::C);
+
+        assert_eq!(kind.subvalence(0), 4)
+    }
+
+    #[test]
+    fn defaults_one_valent() {
+        let kind = AtomKind::Selection(Selection::C);
+
+        assert_eq!(kind.subvalence(4), 0)
+    }
+
+    #[test]
+    fn defaults_one_supervalent() {
+        let kind = AtomKind::Selection(Selection::C);
+
+        assert_eq!(kind.subvalence(5), 0)
+    }
+
+    #[test]
+    fn defaults_two_subvalent_first() {
+        let kind = AtomKind::Selection(Selection::N);
+
+        assert_eq!(kind.subvalence(2), 1)
+    }
+
+    #[test]
+    fn defaults_two_subvalent_second() {
+        let kind = AtomKind::Selection(Selection::N);
+
+        assert_eq!(kind.subvalence(4), 1)
     }
 }

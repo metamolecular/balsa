@@ -22,4 +22,22 @@ impl Atom {
             edges,
         }
     }
+
+    pub fn subvalence(&self, input: Option<&Edge>) -> u8 {
+        todo!()
+    }
+}
+
+#[cfg(test)]
+mod subvalence {
+    use pretty_assertions::assert_eq;
+    use super::*;
+
+    #[test]#[ignore]
+    fn star_input_none() {
+        let atom = Atom::star(vec![]);
+        let input = None;
+
+        assert_eq!(atom.subvalence(input), 0)
+    }
 }

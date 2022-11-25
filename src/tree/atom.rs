@@ -1,6 +1,4 @@
-use crate::feature::{
-    AtomKind, BondKind, Bracket, Selection, Shortcut,
-};
+use crate::feature::{AtomKind, BondKind, Bracket, Selection, Shortcut};
 
 use super::Edge;
 

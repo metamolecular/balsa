@@ -67,6 +67,18 @@ impl AtomKind {
 
         0
     }
+
+    pub fn virtual_hydrogens(&self) -> u8 {
+        match self {
+            AtomKind::Star | AtomKind::Shortcut(_) | AtomKind::Selection(_) => {
+                0
+            }
+            AtomKind::Bracket(bracket) => match &bracket.hydrogens {
+                Some(hydrogens) => hydrogens.into(),
+                None => 0,
+            },
+        }
+    }
 }
 
 #[cfg(test)]

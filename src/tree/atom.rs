@@ -49,23 +49,11 @@ impl Atom {
             Some(input) => input.bond_order(),
             None => 0,
         };
-        let virtual_hydrogens = self.virtual_hydrogens();
+        let virtual_hydrogens = self.kind.virtual_hydrogens();
         let child_bond_order_sum =
             self.edges.iter().fold(0, |r, e| r + e.bond_order());
 
         input_bond_order + virtual_hydrogens + child_bond_order_sum
-    }
-
-    pub fn virtual_hydrogens(&self) -> u8 {
-        match &self.kind {
-            AtomKind::Star | AtomKind::Shortcut(_) | AtomKind::Selection(_) => {
-                0
-            }
-            AtomKind::Bracket(bracket) => match &bracket.hydrogens {
-                Some(hydrogens) => hydrogens.into(),
-                None => 0,
-            },
-        }
     }
 
     pub fn subvalence(&self, input: Option<&BondKind>) -> u8 {
@@ -80,7 +68,7 @@ mod valence {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn star_input_none_children_none() {
+    fn zerovalent() {
         let atom = Atom::star(vec![]);
         let input = None;
 
@@ -88,7 +76,7 @@ mod valence {
     }
 
     #[test]
-    fn star_input_double_children_none() {
+    fn hydrogens_none_input_double() {
         let atom = Atom::star(vec![]);
         let input = Some(BondKind::Double);
 
@@ -96,7 +84,7 @@ mod valence {
     }
 
     #[test]
-    fn bracket_hydrogens_one_input_single_edges_none() {
+    fn hydrogens_one_input_single() {
         let atom = Atom::bracket(
             Bracket {
                 hydrogens: Some(VirtualHydrogen::H),
@@ -110,7 +98,7 @@ mod valence {
     }
 
     #[test]
-    fn bracket_hydrogens_one_input_single_edges_gap() {
+    fn hydrogens_one_input_single_children_gap() {
         let atom = Atom::bracket(
             Bracket {
                 hydrogens: Some(VirtualHydrogen::H),
@@ -124,7 +112,7 @@ mod valence {
     }
 
     #[test]
-    fn bracket_hydrogens_one_input_single_edges_bond_double() {
+    fn hydrogens_one_input_signle_children_single() {
         let atom = Atom::bracket(
             Bracket {
                 hydrogens: Some(VirtualHydrogen::H),
@@ -146,7 +134,7 @@ mod subvalence {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn star_input_single() {
+    fn star_zerovalent() {
         let atom = Atom::star(vec![]);
         let input = Some(&BondKind::Single);
 
@@ -154,7 +142,7 @@ mod subvalence {
     }
 
     #[test]
-    fn shortcut_input_single() {
+    fn shortcut_subvalent() {
         let atom = Atom::shortcut(Shortcut::C, vec![]);
         let input = Some(&BondKind::Single);
 
@@ -162,7 +150,7 @@ mod subvalence {
     }
 
     #[test]
-    fn selection_input_single() {
+    fn selection_subvalent() {
         let atom = Atom::selection(Selection::C, vec![]);
         let input = Some(&BondKind::Single);
 
@@ -170,7 +158,7 @@ mod subvalence {
     }
 
     #[test]
-    fn bracket_input_single() {
+    fn bracket_subvalent() {
         let atom = Atom::bracket(
             Bracket {
                 symbol: Symbol::Element(Element::C),

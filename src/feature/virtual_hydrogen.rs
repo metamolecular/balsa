@@ -37,6 +37,22 @@ impl default::Default for VirtualHydrogen {
     }
 }
 
+impl From<&VirtualHydrogen> for u8 {
+    fn from(value: &VirtualHydrogen) -> Self {
+        match value {
+            VirtualHydrogen::H | VirtualHydrogen::H1 => 1,
+            VirtualHydrogen::H2 => 2,
+            VirtualHydrogen::H3 => 3,
+            VirtualHydrogen::H4 => 4,
+            VirtualHydrogen::H5 => 5,
+            VirtualHydrogen::H6 => 6,
+            VirtualHydrogen::H7 => 7,
+            VirtualHydrogen::H8 => 8,
+            VirtualHydrogen::H9 => 9,
+        }
+    }
+}
+
 impl fmt::Display for VirtualHydrogen {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str(match self {

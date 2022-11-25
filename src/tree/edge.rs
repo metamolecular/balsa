@@ -33,4 +33,11 @@ impl Edge {
             target: Target::Bridge(bridge),
         })
     }
+
+    pub fn bond_order(&self) -> u8 {
+        match self {
+            Self::Bond(bond) => bond.kind.bond_order(),
+            Self::Gap(_) => 0,
+        }
+    }
 }

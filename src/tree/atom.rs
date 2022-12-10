@@ -59,6 +59,27 @@ impl Atom {
     pub fn subvalence(&self, input: Option<&BondKind>) -> u8 {
         self.kind.subvalence(self.valence(input))
     }
+
+    pub fn implicit_hydrogens(&self, input: Option<&BondKind>) -> u8 {
+        match &self.kind {
+            AtomKind::Star => 0,
+            AtomKind::Shortcut(_) => self.subvalence(input),
+            AtomKind::Selection(_) => match self.subvalence(input) {
+                0 => 0,
+                subvalence => subvalence - 1,
+            },
+            AtomKind::Bracket(_) => 0,
+        }
+    }
+
+    pub fn hydrogens(&self, input: Option<&BondKind>) -> u8 {
+        match &self.kind {
+            AtomKind::Star => 0,
+            AtomKind::Shortcut(_) => self.implicit_hydrogens(input),
+            AtomKind::Selection(_) => self.implicit_hydrogens(input),
+            AtomKind::Bracket(bracket) => bracket.hydrogens(),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -170,5 +191,93 @@ mod subvalence {
         let input = Some(&BondKind::Single);
 
         assert_eq!(atom.subvalence(input), 1)
+    }
+}
+
+#[cfg(test)]
+mod implicit_hydrogens {
+    use crate::feature;
+    use pretty_assertions::assert_eq;
+
+    use super::*;
+
+    #[test]
+    fn star_zerovalent() {
+        let atom = Atom::star(vec![]);
+        let input = None;
+
+        assert_eq!(atom.implicit_hydrogens(input), 0)
+    }
+
+    #[test]
+    fn shortcut_carbon_input_elided_children_none() {
+        let atom = Atom::shortcut(feature::Shortcut::C, vec![]);
+        let input = Some(&feature::BondKind::Elided);
+
+        assert_eq!(atom.implicit_hydrogens(input), 3)
+    }
+
+    #[test]
+    fn selection_carbon_input_elided_children_none() {
+        let atom = Atom::selection(feature::Selection::C, vec![]);
+        let input = Some(&BondKind::Elided);
+
+        assert_eq!(atom.implicit_hydrogens(input), 2)
+    }
+
+    #[test]
+    fn bracket_carbon_input_elided_children_none() {
+        let atom = Atom::bracket(
+            feature::Bracket {
+                symbol: feature::Symbol::Element(feature::Element::C),
+                ..Default::default()
+            },
+            vec![],
+        );
+        let input = Some(&BondKind::Elided);
+
+        assert_eq!(atom.implicit_hydrogens(input), 0)
+    }
+}
+
+#[cfg(test)]
+mod hydrogens {
+    use pretty_assertions::assert_eq;
+    use crate::feature;
+    use super::*;
+
+    #[test]
+    fn star() {
+        let atom = Atom::star(vec![]);
+        let input = None;
+
+        assert_eq!(atom.hydrogens(input), 0)
+    }
+
+    #[test]
+    fn shortcut() {
+        let atom = Atom::shortcut(feature::Shortcut::C, vec![]);
+        let input = None;
+
+        assert_eq!(atom.hydrogens(input), 4)
+    }
+
+    #[test]
+    fn selection() {
+        let atom = Atom::selection(feature::Selection::C, vec![]);
+        let input = None;
+
+        assert_eq!(atom.hydrogens(input), 3)
+    }
+
+    #[test]
+    fn bracket_hydrogens_some() {
+        let atom = Atom::bracket(feature::Bracket {
+            hydrogens: Some(feature::VirtualHydrogen::H2),
+            ..Default::default()
+        }, vec![]);
+        let input = None;
+
+        assert_eq!(atom.hydrogens(input), 2)
     }
 }

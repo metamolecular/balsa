@@ -48,6 +48,27 @@ impl Atom {
     pub fn subvalence(&self) -> u8 {
         self.kind.subvalence(self.valence())
     }
+
+    pub fn implicit_hydrogens(&self) -> u8 {
+        match &self.kind {
+            AtomKind::Star => 0,
+            AtomKind::Shortcut(_) => self.subvalence(),
+            AtomKind::Selection(_) => match self.subvalence() {
+                0 => 0,
+                subvalence => subvalence - 1,
+            },
+            AtomKind::Bracket(_) => 0,
+        }
+    }
+
+    pub fn hydrogens(&self) -> u8 {
+        match &self.kind {
+            AtomKind::Star => 0,
+            AtomKind::Shortcut(_) => self.implicit_hydrogens(),
+            AtomKind::Selection(_) => self.implicit_hydrogens(),
+            AtomKind::Bracket(bracket) => bracket.hydrogens()
+        }
+    }
 }
 
 #[cfg(test)]
@@ -160,5 +181,90 @@ mod subvalence {
         );
 
         assert_eq!(atom.subvalence(), 0)
+    }
+}
+
+#[cfg(test)]
+mod implicit_hydrogens {
+    use crate::feature;
+
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn star_zerovalent() {
+        let atom = Atom::star(vec![]);
+
+        assert_eq!(atom.implicit_hydrogens(), 0)
+    }
+
+    #[test]
+    fn shortcut_carbon_neighbors_elided() {
+        let atom = Atom::shortcut(feature::Shortcut::C, vec![
+            Bond::elided(1)
+        ]);
+
+        assert_eq!(atom.implicit_hydrogens(), 3)
+    }
+
+    #[test]
+    fn selection_carbon_neighbors_elided() {
+        let atom = Atom::selection(feature::Selection::C, vec![
+            Bond::elided(1)
+        ]);
+
+        assert_eq!(atom.implicit_hydrogens(), 2)
+    }
+
+    #[test]
+    fn bracket_carbon_neighbors_elided() {
+        let atom = Atom::bracket(feature::Bracket {
+            symbol: feature::Symbol::Element(feature::Element::C),
+            ..Default::default()
+        }, vec![
+            Bond::elided(1)
+        ]);
+
+        assert_eq!(atom.implicit_hydrogens(), 0)
+    }
+}
+
+#[cfg(test)]
+mod hydrogens {
+    use pretty_assertions::assert_eq;
+    use crate::feature;
+
+    use super::*;
+
+    #[test]
+    fn star_shortcut() {
+        let atom = Atom::star(vec![]);
+
+        assert_eq!(atom.hydrogens(), 0)
+    }
+
+    #[test]
+    fn shortcut_carbon() {
+        let atom = Atom::shortcut(feature::Shortcut::C, vec![]);
+
+        assert_eq!(atom.hydrogens(), 4)
+    }
+
+    #[test]
+    fn selection_carbon() {
+        let atom = Atom::selection(feature::Selection::C, vec![]);
+
+        assert_eq!(atom.hydrogens(), 3)
+    }
+
+    #[test]
+    fn bracket_carbon_hydrogens_some() {
+        let atom = Atom::bracket(feature::Bracket {
+            symbol: feature::Symbol::Element(feature::Element::C),
+            hydrogens: Some(feature::VirtualHydrogen::H),
+            ..Default::default()
+        }, vec![]);
+
+        assert_eq!(atom.hydrogens(), 1)
     }
 }

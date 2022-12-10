@@ -37,8 +37,7 @@ impl BondKind {
 
     pub fn bond_order(&self) -> u8 {
         match self {
-            Self::Elided => 0,
-            Self::Single | Self::Up | Self::Down => 1,
+            Self::Elided | Self::Single | Self::Up | Self::Down => 1,
             Self::Double => 2,
             Self::Triple => 3,
         }

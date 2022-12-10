@@ -11,6 +11,15 @@ pub struct Bracket {
     pub charge: Option<Charge>,
 }
 
+impl Bracket {
+    pub fn hydrogens(&self) -> u8 {
+        match &self.hydrogens {
+            Some(hydrogens) => hydrogens.into(),
+            None => 0
+        }
+    }
+}
+
 impl fmt::Display for Bracket {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_char('[')?;
@@ -34,6 +43,31 @@ impl fmt::Display for Bracket {
         }
 
         f.write_char(']')
+    }
+}
+
+#[cfg(test)]
+mod hydrogens {
+    use pretty_assertions::assert_eq;
+    use super::*;
+
+    #[test]
+    fn none() {
+        let bracket = Bracket {
+            ..Default::default()
+        };
+
+        assert_eq!(bracket.hydrogens(), 0)
+    }
+
+    #[test]
+    fn some() {
+        let bracket = Bracket {
+            hydrogens: Some(VirtualHydrogen::H2),
+            ..Default::default()
+        };
+
+        assert_eq!(bracket.hydrogens(), 2)
     }
 }
 

@@ -15,7 +15,7 @@ impl Bracket {
     pub fn hydrogens(&self) -> u8 {
         match &self.hydrogens {
             Some(hydrogens) => hydrogens.into(),
-            None => 0
+            None => 0,
         }
     }
 }
@@ -48,8 +48,8 @@ impl fmt::Display for Bracket {
 
 #[cfg(test)]
 mod hydrogens {
-    use pretty_assertions::assert_eq;
     use super::*;
+    use pretty_assertions::assert_eq;
 
     #[test]
     fn none() {

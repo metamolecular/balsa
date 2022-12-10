@@ -242,9 +242,9 @@ mod implicit_hydrogens {
 
 #[cfg(test)]
 mod hydrogens {
-    use pretty_assertions::assert_eq;
-    use crate::feature;
     use super::*;
+    use crate::feature;
+    use pretty_assertions::assert_eq;
 
     #[test]
     fn star() {
@@ -272,10 +272,13 @@ mod hydrogens {
 
     #[test]
     fn bracket_hydrogens_some() {
-        let atom = Atom::bracket(feature::Bracket {
-            hydrogens: Some(feature::VirtualHydrogen::H2),
-            ..Default::default()
-        }, vec![]);
+        let atom = Atom::bracket(
+            feature::Bracket {
+                hydrogens: Some(feature::VirtualHydrogen::H2),
+                ..Default::default()
+            },
+            vec![],
+        );
         let input = None;
 
         assert_eq!(atom.hydrogens(input), 2)

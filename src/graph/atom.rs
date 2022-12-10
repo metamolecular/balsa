@@ -66,7 +66,7 @@ impl Atom {
             AtomKind::Star => 0,
             AtomKind::Shortcut(_) => self.implicit_hydrogens(),
             AtomKind::Selection(_) => self.implicit_hydrogens(),
-            AtomKind::Bracket(bracket) => bracket.hydrogens()
+            AtomKind::Bracket(bracket) => bracket.hydrogens(),
         }
     }
 }
@@ -200,30 +200,28 @@ mod implicit_hydrogens {
 
     #[test]
     fn shortcut_carbon_neighbors_elided() {
-        let atom = Atom::shortcut(feature::Shortcut::C, vec![
-            Bond::elided(1)
-        ]);
+        let atom = Atom::shortcut(feature::Shortcut::C, vec![Bond::elided(1)]);
 
         assert_eq!(atom.implicit_hydrogens(), 3)
     }
 
     #[test]
     fn selection_carbon_neighbors_elided() {
-        let atom = Atom::selection(feature::Selection::C, vec![
-            Bond::elided(1)
-        ]);
+        let atom =
+            Atom::selection(feature::Selection::C, vec![Bond::elided(1)]);
 
         assert_eq!(atom.implicit_hydrogens(), 2)
     }
 
     #[test]
     fn bracket_carbon_neighbors_elided() {
-        let atom = Atom::bracket(feature::Bracket {
-            symbol: feature::Symbol::Element(feature::Element::C),
-            ..Default::default()
-        }, vec![
-            Bond::elided(1)
-        ]);
+        let atom = Atom::bracket(
+            feature::Bracket {
+                symbol: feature::Symbol::Element(feature::Element::C),
+                ..Default::default()
+            },
+            vec![Bond::elided(1)],
+        );
 
         assert_eq!(atom.implicit_hydrogens(), 0)
     }
@@ -231,8 +229,8 @@ mod implicit_hydrogens {
 
 #[cfg(test)]
 mod hydrogens {
-    use pretty_assertions::assert_eq;
     use crate::feature;
+    use pretty_assertions::assert_eq;
 
     use super::*;
 
@@ -259,11 +257,14 @@ mod hydrogens {
 
     #[test]
     fn bracket_carbon_hydrogens_some() {
-        let atom = Atom::bracket(feature::Bracket {
-            symbol: feature::Symbol::Element(feature::Element::C),
-            hydrogens: Some(feature::VirtualHydrogen::H),
-            ..Default::default()
-        }, vec![]);
+        let atom = Atom::bracket(
+            feature::Bracket {
+                symbol: feature::Symbol::Element(feature::Element::C),
+                hydrogens: Some(feature::VirtualHydrogen::H),
+                ..Default::default()
+            },
+            vec![],
+        );
 
         assert_eq!(atom.hydrogens(), 1)
     }

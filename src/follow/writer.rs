@@ -46,14 +46,14 @@ impl Follower for Writer {
         top.push_str(&atom_kind.to_string());
     }
 
-    fn bridge(&mut self, bond_kind: &BondKind, cut: &Bridge) {
+    fn bridge(&mut self, bond_kind: &BondKind, bridge: &Bridge) {
         let top = match self.stack.last_mut() {
             Some(string) => string,
             None => &mut self.base,
         };
 
         top.push_str(&bond_kind.to_string());
-        top.push_str(&cut.to_string());
+        top.push_str(&bridge.to_string());
     }
 
     fn push(&mut self) {

@@ -97,9 +97,13 @@ fn branch(
         }
     }
 
-    if scanner.take(&')') {
-        reporter.pop();
+    if !scanner.take(&')') {
+        return Err(missing_character(scanner))
+    }
 
+    reporter.pop();
+
+    if union(scanner, reporter)? || branch(scanner, reporter)? {
         Ok(true)
     } else {
         Err(missing_character(scanner))
@@ -239,6 +243,20 @@ mod tests {
         let mut writer = Writer::new();
 
         assert_eq!(read("*(.x", &mut writer), Err(Error::Character(3)))
+    }
+
+    #[test]
+    fn trailing_branch() {
+        let mut writer = Writer::new();
+
+        assert_eq!(read("*(*)", &mut writer), Err(Error::EndOfLine))
+    }
+
+    #[test]
+    fn gap_after_branch() {
+        let mut writer = Writer::new();
+
+        assert_eq!(read("*(*).*", &mut writer), Err(Error::Character(4)))
     }
 
     #[test]
